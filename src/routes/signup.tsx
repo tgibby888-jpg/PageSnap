@@ -64,6 +64,10 @@ function Signup() {
     try {
       const res = await createSignupKey({ data: { name, tier } });
       setResult(res);
+      // Persist the key so pricing/dashboard can find it
+      if (typeof window !== "undefined") {
+        localStorage.setItem("pagesnap_api_key", res.key);
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Something went wrong. Try again.",
