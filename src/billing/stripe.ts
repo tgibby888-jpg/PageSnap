@@ -8,12 +8,11 @@ import {
 } from "../db/index";
 
 // ── Tier → Price mapping ────────────────────────────────
-// In production, these are real Stripe Price IDs.
-// For now, use placeholder IDs — the checkout session will fail
-// gracefully if STRIPE_SECRET_KEY is unset.
+// Real Stripe Price IDs. Can be overridden via STRIPE_PRO_PRICE_ID
+// and STRIPE_SCALE_PRICE_ID environment variables.
 const TIER_PRICES: Record<string, string | null> = {
-  pro: process.env.STRIPE_PRO_PRICE_ID ?? "price_pro_monthly",
-  scale: process.env.STRIPE_SCALE_PRICE_ID ?? "price_scale_monthly",
+  pro: process.env.STRIPE_PRO_PRICE_ID ?? "price_1TuhwjF7MddSeGqsBQCWTuz5",
+  scale: process.env.STRIPE_SCALE_PRICE_ID ?? "price_1TuhzGF7MddSeGqsC9wIX54S",
   enterprise: null, // custom pricing, not self-serve
 };
 
@@ -44,9 +43,7 @@ function getStripe(): Stripe | null {
     return null;
   }
 
-  stripe = new Stripe(key, {
-    apiVersion: "2025-06-30.acacia" as any,
-  });
+  stripe = new Stripe(key);
   return stripe;
 }
 

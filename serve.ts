@@ -8,6 +8,17 @@
 // member's `bun run publish` runs as their own user), so publish never collides
 // with an already-running server. Every sandbox user has passwordless sudo, so
 // the takeover works across user boundaries.
+// Load .env file (Bun v1.3 doesn't have process.loadEnvFile yet)
+import { readFileSync } from "fs";
+try {
+  const envData = readFileSync(".env", "utf-8");
+  for (const line of envData.split("\n")) {
+    const eq = line.indexOf("=");
+    if (eq > 0 && !line.startsWith("#")) {
+      process.env[line.slice(0, eq).trim()] = line.slice(eq + 1).trim();
+    }
+  }
+} catch {}
 import handler from "./dist/server/server.js";
 import { handleApiRequest } from "./src/api-dispatcher.ts";
 
