@@ -1,4 +1,4 @@
-import { authenticate, jsonResponse } from "../../auth";
+import { authenticateRequest, jsonResponse } from "../../auth";
 import { getUsageForApiKey, getSubscriptionByApiKey } from "../../db/index";
 
 const TIER_LIMITS: Record<string, number | null> = {
@@ -10,7 +10,7 @@ const TIER_LIMITS: Record<string, number | null> = {
 
 // GET /api/usage — Return usage stats for the authenticated API key
 export async function GET(req: Request): Promise<Response> {
-  const auth = await authenticate(req);
+  const auth = await authenticateRequest(req);
   if (auth instanceof Response) return auth;
 
   // Determine effective tier: subscription tier overrides api_key tier

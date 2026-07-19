@@ -1,4 +1,4 @@
-import { authenticate, jsonResponse } from "../../auth";
+import { authenticateRequest, jsonResponse } from "../../auth";
 import { logUsage, getUsageForApiKey, getSubscriptionByApiKey } from "../../db/index";
 import { enqueueScreenshot } from "../../screenshot/queue";
 
@@ -11,7 +11,7 @@ const TIER_LIMITS: Record<string, number | null> = {
 
 export async function POST(req: Request): Promise<Response> {
   // ── Auth (shared, SHA-256 based) ──────────────────────
-  const auth = await authenticate(req);
+  const auth = await authenticateRequest(req);
   if (auth instanceof Response) return auth;
 
   // ── Determine effective tier ──────────────────────────

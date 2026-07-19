@@ -1,4 +1,4 @@
-import { authenticate, jsonResponse, jsonError } from "../../auth";
+import { authenticateRequest, jsonResponse, jsonError } from "../../auth";
 import { createApiKey, listApiKeys, revokeApiKey, getApiKeyById } from "../../db/index";
 
 function maskHash(hash: string): string {
@@ -8,7 +8,7 @@ function maskHash(hash: string): string {
 
 // GET /api/keys — List all API keys (masked)
 export async function GET(req: Request): Promise<Response> {
-  const auth = await authenticate(req);
+  const auth = await authenticateRequest(req);
   if (auth instanceof Response) return auth;
 
   const keys = listApiKeys() as Array<{
@@ -37,7 +37,7 @@ export async function GET(req: Request): Promise<Response> {
 // POST /api/keys — Create a new API key
 export async function POST(req: Request): Promise<Response> {
   // Require auth — bootstrap: seed a key directly in DB for the first one
-  const auth = await authenticate(req);
+  const auth = await authenticateRequest(req);
   if (auth instanceof Response) return auth;
 
   let body: Record<string, unknown>;
@@ -84,7 +84,7 @@ export async function POST(req: Request): Promise<Response> {
 
 // DELETE /api/keys?id=<id> — Revoke an API key
 export async function DELETE(req: Request): Promise<Response> {
-  const auth = await authenticate(req);
+  const auth = await authenticateRequest(req);
   if (auth instanceof Response) return auth;
 
   const url = new URL(req.url);

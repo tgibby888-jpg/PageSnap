@@ -1,9 +1,9 @@
-import { authenticate, jsonResponse, jsonError } from "../../../auth";
+import { authenticateRequest, jsonResponse, jsonError } from "../../../auth";
 import { createCheckoutSession } from "../../../billing/stripe";
 
 // POST /api/billing/upgrade — Start a Stripe checkout session
 export async function POST(req: Request): Promise<Response> {
-  const auth = await authenticate(req);
+  const auth = await authenticateRequest(req);
   if (auth instanceof Response) return auth;
 
   let body: Record<string, unknown>;

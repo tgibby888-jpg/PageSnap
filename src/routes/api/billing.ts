@@ -1,10 +1,10 @@
-import { authenticate, jsonResponse } from "../../auth";
+import { authenticateRequest, jsonResponse } from "../../auth";
 import { getSubscriptionByApiKey, getUsageForApiKey } from "../../db/index";
 import { TIER_LIMITS } from "../../billing/stripe";
 
 // GET /api/billing — Return billing/subscription status
 export async function GET(req: Request): Promise<Response> {
-  const auth = await authenticate(req);
+  const auth = await authenticateRequest(req);
   if (auth instanceof Response) return auth;
 
   // Determine effective tier
